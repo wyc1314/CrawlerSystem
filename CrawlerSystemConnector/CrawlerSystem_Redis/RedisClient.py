@@ -84,9 +84,9 @@ class RedisHelper(object):
 
 rds = RedisHelper()
 # print(rds.get_hash("BD0023-2"))
-print(rds.get_len("CtripReview:requests"))
-print(rds.get_len("CtripPrice:requests"))
-print(rds.get_len("MeiTuanReview:requests"))
+# print(rds.get_len("CtripReview:requests"))
+# print(rds.get_len("CtripPrice:requests"))
+# print(rds.get_len("MeiTuanReview:requests"))
 #
 # rds.delete("CtripReview:requests")
 # rds.delete("CtripPrice:requests")

@@ -5,21 +5,7 @@
 # @describe :
 import os,sys
 
-# from CrawlerRunner.CrawlerServer import RunCrawlerServer
 from scrapy.utils.conf import closest_scrapy_cfg
-# def closest_scrapy_cfg(path='.', prevpath=None):
-#     """Return the path to the closest scrapy.cfg file by traversing the current
-#     directory and its parents
-#     """
-#     if path == prevpath:
-#         return ''
-#     # 获得当前目录的绝对路径
-#     path = os.path.abspath(path)
-#     # 获得当前目录 scrapy.cfg 的绝对路径
-#     cfgfile = os.path.join(path, 'scrapy.cfg')
-#     if os.path.exists(cfgfile):
-#         return cfgfile
-#     return closest_scrapy_cfg(os.path.dirname(path), path)
 
 closest = closest_scrapy_cfg()
 
@@ -39,9 +25,8 @@ from apscheduler.schedulers.twisted import TwistedScheduler
 from CrawlerProduct.CreateSpiderTask import createSpiderTask
 from scrapy.crawler import CrawlerProcess
 from CrawlerSystemConnector.CrawlerSystem_MySQ.MySqlClient import SQLServer
-from CrawlerRunner.CrawlerWeb import app
 
-set_ =set()
+# set_ =set()
 def CreateTask(settings,*args,**kwargs):
     mysql_client = SQLServer.from_settings(settings,cf.get("MYSQL_SERVER","type"),db=cf.get("MYSQL_SERVER","db"))
     sql = "select COLUMN_NAME from information_schema.COLUMNS where table_name = 'CRAWLER_SPIDER_TASK';"
@@ -82,11 +67,13 @@ if __name__ == '__main__':
     crawler_process = CrawlerProcess(settings)
     Scheduler = TwistedScheduler()
     if get_current_ip() != settings.get("MASTER_HOST", ""):
+        print(get_current_ip())
+        print(settings.get("MASTER_HOST", ""))
+        print("消费者集群")
         runAllSpiderConsume()
     else:
         # RunCrawlerServer()
         Scheduler.add_job(func=CreateTask, trigger='interval', seconds=2, args=(settings,), id='Test')
     Scheduler._logger = logger
     Scheduler.start()
-    # app.run(port = 8000)
     reactor.run()
